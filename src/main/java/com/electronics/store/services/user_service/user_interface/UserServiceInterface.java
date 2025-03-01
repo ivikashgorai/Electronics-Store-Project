@@ -1,5 +1,6 @@
 package com.electronics.store.services.user_service.user_interface;
 
+import com.electronics.store.dtos.PageableResponse;
 import com.electronics.store.dtos.UserDto;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface UserServiceInterface {
     void deleteUser(String userId);
 
     //getAllUser
-    List<UserDto> getAllUser();
+    PageableResponse<UserDto> getAllUser(int pageNumber, int pageSize, String sortBy, String sortDir);
 
     //getUserById
     UserDto getUserById(String userId);

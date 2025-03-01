@@ -1,13 +1,19 @@
 package com.electronics.store.services.user_service.user_implementations;
 
+import com.electronics.store.dtos.PageableResponse;
 import com.electronics.store.dtos.UserDto;
 import com.electronics.store.entities.User;
 import com.electronics.store.exceptions.ResourceNotFoundException;
 import com.electronics.store.repositories.UserRepository;
 import com.electronics.store.services.user_service.user_interface.UserServiceInterface;
+import com.electronics.store.utility.Helper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -58,13 +64,36 @@ public class UserServiceImplementation implements UserServiceInterface {
     }
 
     @Override
-    public List<UserDto> getAllUser() {
-        List<User> allUser = userRepository.findAll();
-        List<UserDto> allUserDto = new ArrayList<>();
-        for(User u:allUser){
-            allUserDto.add(entityToDto(u));
-        }
-        return allUserDto;
+    public PageableResponse<UserDto> getAllUser(int pageNumber, int pageSize, String sortBy, String sortDir) {
+
+        //Sorting
+        Sort sort = sortDir.equalsIgnoreCase("desc")? Sort.by(sortBy).descending():Sort.by(sortBy).ascending();
+
+        //Pagination
+        Pageable pageable = PageRequest.of(pageNumber, pageSize,sort);
+        Page<User> page = userRepository.findAll(pageable);
+
+        //below code is reusable so applied in utility package helper class
+//        List<User> allUser =  page.getContent();
+//        List<UserDto> allUserDto = new ArrayList<>();
+//
+//        for(User u:allUser){
+//            allUserDto.add(entityToDto(u));
+//        }
+//
+//
+//        PageableResponse<UserDto> response = PageableResponse.<UserDto>builder()
+//                .content(allUserDto)
+//                .pageNumber(page.getNumber())
+//                .pageSize(page.getSize())
+//                .totalElements(page.getTotalElements())
+//                .totalPages(page.getTotalPages())
+//                .isLastPage(page.isLast())
+//                .build();
+
+        PageableResponse<UserDto> pagableResponse = Helper.getPagableResponse(page, UserDto.class);
+
+        return pagableResponse;
     }
 
     @Override

@@ -1,10 +1,12 @@
 package com.electronics.store.controllers;
 
 import com.electronics.store.dtos.ApiResponseMessage;
+import com.electronics.store.dtos.PageableResponse;
 import com.electronics.store.dtos.UserDto;
 import com.electronics.store.services.user_service.user_interface.UserServiceInterface;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,8 +56,14 @@ public class UserController {
 
     //get all
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUser(){
-        return new ResponseEntity<>(userServiceInterface.getAllUser(),HttpStatus.OK);
+    public ResponseEntity<PageableResponse<UserDto>> getAllUser(
+            // applying pagination
+            @RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber, //page number index starts from 0
+            @RequestParam(value = "pageSize",defaultValue = "2",required = false) int pageSize,
+            @RequestParam(value = "sortBy",defaultValue = "name",required = false) String sortBy, // can be any variable of User like email,about etc.
+            @RequestParam(value = "sortDir",defaultValue = "asc",required = false) String sortDir // can be desc or asc
+    ){
+        return new ResponseEntity<>(userServiceInterface.getAllUser(pageNumber,pageSize,sortBy,sortDir),HttpStatus.OK);
     }
 
     //get single
