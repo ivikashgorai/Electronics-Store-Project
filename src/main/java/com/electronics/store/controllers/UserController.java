@@ -1,16 +1,22 @@
 package com.electronics.store.controllers;
 
 import com.electronics.store.dtos.ApiResponseMessage;
+import com.electronics.store.dtos.ImageResponseMessage;
 import com.electronics.store.dtos.PageableResponse;
 import com.electronics.store.dtos.UserDto;
+import com.electronics.store.entities.User;
+import com.electronics.store.services.file_service.file_interface.FileServiceInterface;
 import com.electronics.store.services.user_service.user_interface.UserServiceInterface;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -19,6 +25,12 @@ public class UserController {
 
     @Autowired
     private UserServiceInterface userServiceInterface;
+
+    @Autowired
+    private FileServiceInterface fileServiceInterface;
+
+    @Value("${user.profile.image.path}") // from application.properties
+    private String imageUploadPath;
 
     @PostMapping //create
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto){ //@valid for validation of data coming
@@ -89,5 +101,21 @@ public class UserController {
     ){
         return new ResponseEntity<>(userServiceInterface.getUserByKeyword(keyword),HttpStatus.OK);
     }
+
+    //upload user image
+    @PostMapping("/image/{userId}")
+    public ResponseEntity<ImageResponseMessage> uploadUserImage(
+            @RequestParam("userImage") MultipartFile userImage,
+            @PathVariable("userId") String userId
+    ) throws IOException {
+        String imageName = fileServiceInterface.uploadFile(userImage, imageUploadPath);
+        UserDto userDto  = userServiceInterface.getUserById(userId);
+        userDto.setImageName(imageName);
+        UserDto updatedUserDto = userServiceInterface.updateUser(userDto, userId);
+        ImageResponseMessage imageResponseMessage = ImageResponseMessage.builder().imageName(imageName).success(true).status(HttpStatus.CREATED).build();
+        return new ResponseEntity<>(imageResponseMessage,HttpStatus.CREATED);
+    }
+
+    //serve user image
 
 }

@@ -16,7 +16,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    //handing resource not found
+    //handing resource not found custom exception
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiResponseMessage> resourceNotFoundExceptionHandler(ResourceNotFoundException ex){
         ApiResponseMessage response = ApiResponseMessage.builder().message(ex.getMessage()).status(HttpStatus.NOT_FOUND).success(true).build();
@@ -35,5 +35,12 @@ public class GlobalExceptionHandler {
             response.put(field,message);
         }
         return  new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
+    }
+
+    //handling bad request custom exception
+    @ExceptionHandler(BadApiRequestException.class)
+    public ResponseEntity<ApiResponseMessage> resourceNotFoundExceptionHandler(BadApiRequestException ex){
+        ApiResponseMessage response = ApiResponseMessage.builder().message(ex.getMessage()).status(HttpStatus.BAD_REQUEST).success(true).build();
+        return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
     }
 }

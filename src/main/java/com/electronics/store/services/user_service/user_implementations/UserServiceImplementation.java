@@ -50,11 +50,11 @@ public class UserServiceImplementation implements UserServiceInterface {
         user.setImageName(userDto.getImageName());
         user.setName(userDto.getName());
         user.setGender(userDto.getGender());
-//        user.setEmail(userDto.getEmail());
         user.setAbout(userDto.getAbout());
         user.setPassword(userDto.getPassword());
-        UserDto updatedDto = entityToDto(user);
-        return updatedDto;
+        user.setImageName(userDto.getImageName());
+        userRepository.save(user);
+        return entityToDto(user);
     }
 
     @Override
