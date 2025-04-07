@@ -9,6 +9,7 @@ import com.electronics.store.services.product_service.ProductServiceInterface;
 import com.electronics.store.utility.Helper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +18,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Date;
 import java.util.UUID;
 
 @Service
@@ -29,10 +35,14 @@ public class ProductServiceImplementation implements ProductServiceInterface {
     @Autowired
     private ModelMapper mapper;
 
+    @Value("${product.image.path}")
+    private String imagePath;
+
     @Override
     public ProductDto createProduct(ProductDto productDto) {
         String productId = UUID.randomUUID().toString();
         productDto.setProductId(productId);
+        productDto.setAddedDate(new Date());
         Product product = mapper.map(productDto,Product.class);
         Product saved = productRepository.save(product);
         return mapper.map(saved,ProductDto.class);
@@ -40,22 +50,54 @@ public class ProductServiceImplementation implements ProductServiceInterface {
 
     @Override
     public ProductDto updateProduct(ProductDto productDto, String productId) {
-        Product toBeUpdatedProduct  = productRepository.findById(productId).orElseThrow(()-> new ResourceNotFoundException("Product Not Found"));
-        toBeUpdatedProduct.setTitle(productDto.getTitle());
-        toBeUpdatedProduct.setDescription(productDto.getDescription());
-        toBeUpdatedProduct.setDiscountedPrice(productDto.getDiscountedPrice());
-        toBeUpdatedProduct.setPrice(productDto.getPrice());
-        toBeUpdatedProduct.setQuantity(productDto.getQuantity());
+        Product toBeUpdatedProduct = productRepository.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product Not Found"));
+
+        //checking for null do that if did not send any variable it will remain same as it is
+        if (productDto.getTitle() != null) {
+            toBeUpdatedProduct.setTitle(productDto.getTitle());
+        }
+
+        if (productDto.getDescription() != null) {
+            toBeUpdatedProduct.setDescription(productDto.getDescription());
+        }
+
+        if (productDto.getPrice() != 0) {
+            toBeUpdatedProduct.setPrice(productDto.getPrice());
+        }
+
+        if (productDto.getDiscountedPrice() != 0) {
+            toBeUpdatedProduct.setDiscountedPrice(productDto.getDiscountedPrice());
+        }
+
+        if (productDto.getQuantity() != 0) {
+            toBeUpdatedProduct.setQuantity(productDto.getQuantity());
+        }
+
+        if(productDto.getProductImageName()!=null){
+            toBeUpdatedProduct.setProductImageName(productDto.getProductImageName());
+        }
+        // For boolean fields, consider using Boolean objects instead of primitive types
         toBeUpdatedProduct.setLive(productDto.isLive());
         toBeUpdatedProduct.setStock(productDto.isStock());
-        Product save = productRepository.save(toBeUpdatedProduct);
-        return mapper.map(save,ProductDto.class);
 
+        Product save = productRepository.save(toBeUpdatedProduct);
+        return mapper.map(save, ProductDto.class);
     }
+
 
     @Override
     public void deleteProduct(String productId) {
         Product product  = productRepository.findById(productId).orElseThrow(()-> new ResourceNotFoundException("Product Not Found"));
+        String imageName = product.getProductImageName();
+        String fullImagePath = imagePath + File.separator + imageName; //where image resides
+        try{
+            Path path = Paths.get(fullImagePath);
+            Files.delete(path);
+        }
+        catch (Exception e){ // if file does not exist
+            System.out.println(e.getMessage()+" No Such File exist");
+        }
         productRepository.delete(product);
     }
 

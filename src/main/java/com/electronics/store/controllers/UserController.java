@@ -4,7 +4,7 @@ import com.electronics.store.dtos.response_message.ApiResponseMessage;
 import com.electronics.store.dtos.response_message.ImageResponseMessage;
 import com.electronics.store.dtos.paging_response.PageableResponse;
 import com.electronics.store.dtos.entityDtos.UserDto;
-import com.electronics.store.services.file_service.file_interface.FileServiceInterface;
+import com.electronics.store.services.file_service.FileServiceInterface;
 import com.electronics.store.services.user_service.UserServiceInterface;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;

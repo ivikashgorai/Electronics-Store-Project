@@ -1,6 +1,5 @@
-package com.electronics.store.services.file_service.file_interface;
+package com.electronics.store.services.file_service;
 
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;

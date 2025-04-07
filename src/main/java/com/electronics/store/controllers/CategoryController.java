@@ -1,12 +1,11 @@
 package com.electronics.store.controllers;
 
 import com.electronics.store.dtos.entityDtos.CategoryDto;
-import com.electronics.store.dtos.entityDtos.UserDto;
 import com.electronics.store.dtos.paging_response.PageableResponse;
 import com.electronics.store.dtos.response_message.ApiResponseMessage;
 import com.electronics.store.dtos.response_message.ImageResponseMessage;
 import com.electronics.store.services.category_service.CategoryServiceInterface;
-import com.electronics.store.services.file_service.file_interface.FileServiceInterface;
+import com.electronics.store.services.file_service.FileServiceInterface;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
