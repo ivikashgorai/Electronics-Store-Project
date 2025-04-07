@@ -1,8 +1,9 @@
-package com.electronics.store.services.user_service.user_interface;
+package com.electronics.store.services.user_service;
 
-import com.electronics.store.dtos.PageableResponse;
-import com.electronics.store.dtos.UserDto;
+import com.electronics.store.dtos.paging_response.PageableResponse;
+import com.electronics.store.dtos.entityDtos.UserDto;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface UserServiceInterface {
@@ -15,7 +16,7 @@ public interface UserServiceInterface {
     UserDto updateUser(UserDto userDto,String userId);
 
     //delete
-    void deleteUser(String userId);
+    void deleteUser(String userId) throws IOException;
 
     //getAllUser
     PageableResponse<UserDto> getAllUser(int pageNumber, int pageSize, String sortBy, String sortDir);

@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = ImageNameValidator.class)
-public @interface ImageNameValid {
+public @interface ImageNameValid { //api constrain validator like size, not blank in dto
 
 
 //default error message

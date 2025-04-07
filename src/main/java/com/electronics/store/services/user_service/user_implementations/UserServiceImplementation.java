@@ -1,14 +1,15 @@
 package com.electronics.store.services.user_service.user_implementations;
 
-import com.electronics.store.dtos.PageableResponse;
-import com.electronics.store.dtos.UserDto;
+import com.electronics.store.dtos.paging_response.PageableResponse;
+import com.electronics.store.dtos.entityDtos.UserDto;
 import com.electronics.store.entities.User;
 import com.electronics.store.exceptions.ResourceNotFoundException;
 import com.electronics.store.repositories.UserRepository;
-import com.electronics.store.services.user_service.user_interface.UserServiceInterface;
+import com.electronics.store.services.user_service.UserServiceInterface;
 import com.electronics.store.utility.Helper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +17,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -29,6 +34,9 @@ public class UserServiceImplementation implements UserServiceInterface {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Value("${user.profile.image.path}")
+    private String imagePath;
 
     @Override
     public UserDto createUser(UserDto userDto) {
@@ -60,6 +68,19 @@ public class UserServiceImplementation implements UserServiceInterface {
     @Override
     public void deleteUser(String userId) {
         User user = userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User not found"));
+        //deleting user image
+        String imageName = user.getImageName();
+        String fullImagePath = imagePath+ File.separator+imageName;
+        try { //  below deleting image of user
+            // sometimes it give file cant be access error
+            // but when we will upload in server this error will be gone
+            Path path = Paths.get(fullImagePath);
+            Files.delete(path);
+        }
+        catch (Exception e){ // if file does not exist
+            System.out.println(e.getMessage()+" No Such File exist");
+        }
+                //deleting user
         userRepository.deleteById(userId);
     }
 

@@ -1,8 +1,6 @@
 package com.electronics.store.utility;
 
-import com.electronics.store.dtos.PageableResponse;
-import com.electronics.store.dtos.UserDto;
-import com.electronics.store.entities.User;
+import com.electronics.store.dtos.paging_response.PageableResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 

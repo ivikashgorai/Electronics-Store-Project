@@ -15,7 +15,7 @@ import lombok.*;
 @Table(name = "users")
 public class User {
     //can use @Column(name ="") for column name etc.
-     @Id
+     @Id //primary key
     private String userId;
      @Column(name="user_name",length = 20)
     private String name;

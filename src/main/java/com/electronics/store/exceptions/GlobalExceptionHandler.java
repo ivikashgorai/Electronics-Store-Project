@@ -1,6 +1,6 @@
 package com.electronics.store.exceptions;
 
-import com.electronics.store.dtos.ApiResponseMessage;
+import com.electronics.store.dtos.response_message.ApiResponseMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;

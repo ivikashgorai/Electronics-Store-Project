@@ -1,4 +1,4 @@
-package com.electronics.store.dtos;
+package com.electronics.store.dtos.paging_response;
 
 import lombok.*;
 

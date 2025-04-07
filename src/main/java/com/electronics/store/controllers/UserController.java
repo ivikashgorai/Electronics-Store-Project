@@ -1,17 +1,15 @@
 package com.electronics.store.controllers;
 
-import com.electronics.store.dtos.ApiResponseMessage;
-import com.electronics.store.dtos.ImageResponseMessage;
-import com.electronics.store.dtos.PageableResponse;
-import com.electronics.store.dtos.UserDto;
-import com.electronics.store.entities.User;
+import com.electronics.store.dtos.response_message.ApiResponseMessage;
+import com.electronics.store.dtos.response_message.ImageResponseMessage;
+import com.electronics.store.dtos.paging_response.PageableResponse;
+import com.electronics.store.dtos.entityDtos.UserDto;
 import com.electronics.store.services.file_service.file_interface.FileServiceInterface;
-import com.electronics.store.services.user_service.user_interface.UserServiceInterface;
+import com.electronics.store.services.user_service.UserServiceInterface;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +17,6 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -57,7 +54,7 @@ public class UserController {
     @DeleteMapping("/{userId}")
     public ResponseEntity<ApiResponseMessage> deleteUser(
             @PathVariable("userId") String id
-    ){
+    ) throws IOException {
         userServiceInterface.deleteUser(id);
         //instead of String we should send json
 //        return new ResponseEntity<>("User is successfully deleted",HttpStatus.OK);

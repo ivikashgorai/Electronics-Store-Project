@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository // no need for this annotation , its implementation will come dynamically by orm jpa
-public interface  UserRepository extends JpaRepository<User,String> {
+public interface  UserRepository extends JpaRepository<User,String> { //primary key and its return type
 
-    Optional<User> findByEmail(String email);
-    List<User> findByNameContaining(String keyword);
+    Optional<User> findByEmail(String email); //customized command
+    List<User> findByNameContaining(String keyword);//customized command
 
 }

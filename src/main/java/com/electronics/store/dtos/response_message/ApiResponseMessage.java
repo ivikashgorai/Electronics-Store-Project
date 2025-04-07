@@ -1,4 +1,4 @@
-package com.electronics.store.dtos;
+package com.electronics.store.dtos.response_message;
 
 import lombok.*;
 import org.springframework.http.HttpStatus;
@@ -8,11 +8,8 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ImageResponseMessage {
-    private String imageName;
+public class ApiResponseMessage {
     private String message;
     private boolean success;
     private HttpStatus status;
-
-
 }

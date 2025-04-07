@@ -1,4 +1,4 @@
-package com.electronics.store.dtos;
+package com.electronics.store.dtos.entityDtos;
 
 import com.electronics.store.validate.ImageNameValid;
 import jakarta.validation.constraints.NotBlank;
