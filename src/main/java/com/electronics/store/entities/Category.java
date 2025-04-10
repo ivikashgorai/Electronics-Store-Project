@@ -1,11 +1,10 @@
 package com.electronics.store.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,4 +24,12 @@ public class Category {
     private String description;
     @Column(name="category_coverImage")
     private String coverImage;
+
+    //one category can have multiple products so we need list of product
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL,fetch = FetchType.LAZY) // one category can have multiple product
+    //cascade All means if category get updated product also will get updated,
+    // if category get delete product will also get deleted
+    // fetch type lazy means if we fetch category then product will not get fetch auto.,product will be get fetched on demand
+    //mappedBy means to manage the mapping, a category column will be there in Product table,we use this so to avoid extra tables
+    private List<Product> productList = new ArrayList<>();
 }

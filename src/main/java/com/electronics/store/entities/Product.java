@@ -1,9 +1,6 @@
 package com.electronics.store.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
@@ -40,4 +37,9 @@ public class Product {
     private boolean stock;
 
     private String productImageName;
+
+    //one product can be in only one category so
+    @ManyToOne(fetch = FetchType.EAGER) // when product will get fetch, category will also get fetch
+    @JoinColumn(name = "category_id") // join column means product table mein ek category id karke column rahega jisme catgeory(category id_) rahaga uss product ka
+    private Category category;
 }
