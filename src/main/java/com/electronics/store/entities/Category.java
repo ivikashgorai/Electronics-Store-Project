@@ -31,5 +31,6 @@ public class Category {
     // if category get delete product will also get deleted
     // fetch type lazy means if we fetch category then product will not get fetch auto.,product will be get fetched on demand
     //mappedBy means to manage the mapping, a category column will be there in Product table,we use this so to avoid extra tables
+    //mapped by mean “This side of the relationship is not the owner, the other side owns the foreign key in the DB.”
     private List<Product> productList = new ArrayList<>();
 }
