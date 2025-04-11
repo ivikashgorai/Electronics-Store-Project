@@ -3,7 +3,6 @@ package com.electronics.store.services.product_service;
 
 import com.electronics.store.dtos.entityDtos.ProductDto;
 import com.electronics.store.dtos.paging_response.PageableResponse;
-import com.electronics.store.entities.Product;
 
 import java.util.List;
 
@@ -30,5 +29,12 @@ public interface ProductServiceInterface {
     //search product
     PageableResponse<ProductDto> getSearchedByTitleProduct(String title,int pageNumber, int pageSize,String sortBy,String sortDir);
 
-    // other methods
+    // create product with category
+    ProductDto createProductWithCategory(ProductDto productDto,String categoryId);
+
+    //assign category to existing product
+    ProductDto assignCategoryToProduct(String productId,String categoryId);
+
+    //get products of a category
+    List<ProductDto> getAllProductsOfACategory(String categoryId);
 }

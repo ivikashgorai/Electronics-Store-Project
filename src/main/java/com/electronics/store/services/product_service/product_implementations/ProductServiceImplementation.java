@@ -2,8 +2,10 @@ package com.electronics.store.services.product_service.product_implementations;
 
 import com.electronics.store.dtos.entityDtos.ProductDto;
 import com.electronics.store.dtos.paging_response.PageableResponse;
+import com.electronics.store.entities.Category;
 import com.electronics.store.entities.Product;
 import com.electronics.store.exceptions.ResourceNotFoundException;
+import com.electronics.store.repositories.CategoryRepository;
 import com.electronics.store.repositories.ProductRepository;
 import com.electronics.store.services.product_service.ProductServiceInterface;
 import com.electronics.store.utility.Helper;
@@ -23,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -31,6 +34,9 @@ public class ProductServiceImplementation implements ProductServiceInterface {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private ModelMapper mapper;
@@ -54,6 +60,7 @@ public class ProductServiceImplementation implements ProductServiceInterface {
                 .orElseThrow(() -> new ResourceNotFoundException("Product Not Found"));
 
         //checking for null do that if did not send any variable it will remain same as it is
+        //mtlb agr koi ek varibale ko bhi update karna chahe toh kar sakta hai
         if (productDto.getTitle() != null) {
             toBeUpdatedProduct.setTitle(productDto.getTitle());
         }
@@ -137,4 +144,36 @@ public class ProductServiceImplementation implements ProductServiceInterface {
         PageableResponse<ProductDto> pageableResponse = Helper.getPagableResponse(page,ProductDto.class);
         return pageableResponse;
     }
+
+    @Override
+    public ProductDto createProductWithCategory(ProductDto productDto,String categoryId){
+        Category category = categoryRepository.findById(categoryId).orElseThrow(()-> new ResourceNotFoundException("Category not found"));
+        Product product = mapper.map(productDto,Product.class);
+        product.setProductId(UUID.randomUUID().toString());
+        product.setAddedDate(new Date());
+        product.setCategory(category);
+        System.out.println(product.getProductId());
+        Product saveProduct = productRepository.save(product);
+        return mapper.map(saveProduct, ProductDto.class);
+    }
+
+    @Override
+    public ProductDto assignCategoryToProduct(String productId, String categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+        Product product = productRepository.findById(productId).orElseThrow(()-> new ResourceNotFoundException("Product not found"));
+        product.setCategory(category);
+        Product save = productRepository.save(product);
+        return mapper.map(save,ProductDto.class);
+    }
+
+    @Override
+    public List<ProductDto> getAllProductsOfACategory(String categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new RuntimeException("Category not found"));
+        List<Product> products  = category.getProductList();
+        return products.stream().map( product->
+                mapper.map(product,ProductDto.class)
+        ).toList();
+    }
+
+
 }

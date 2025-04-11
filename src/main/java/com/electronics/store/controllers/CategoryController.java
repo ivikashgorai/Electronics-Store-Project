@@ -1,11 +1,13 @@
 package com.electronics.store.controllers;
 
 import com.electronics.store.dtos.entityDtos.CategoryDto;
+import com.electronics.store.dtos.entityDtos.ProductDto;
 import com.electronics.store.dtos.paging_response.PageableResponse;
 import com.electronics.store.dtos.response_message.ApiResponseMessage;
 import com.electronics.store.dtos.response_message.ImageResponseMessage;
 import com.electronics.store.services.category_service.CategoryServiceInterface;
 import com.electronics.store.services.file_service.FileServiceInterface;
+import com.electronics.store.services.product_service.ProductServiceInterface;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,9 @@ public class CategoryController {
 
     @Autowired
     private CategoryServiceInterface categoryServiceInterface;
+
+    @Autowired
+    private ProductServiceInterface productServiceInterface;
 
     @Autowired
     private FileServiceInterface fileServiceInterface;
@@ -119,4 +124,32 @@ public class CategoryController {
         StreamUtils.copy(resource,response.getOutputStream());
     }
 
+    //create product with category
+    @PostMapping("/{categoryId}/products")
+    public ResponseEntity<ProductDto> createProductWithCategory(
+            @RequestBody ProductDto productDto,
+            @PathVariable("categoryId") String categoryId
+    ){
+        ProductDto productWithCategory = productServiceInterface.createProductWithCategory(productDto, categoryId);
+        return new ResponseEntity<>(productWithCategory,HttpStatus.CREATED);
+    }
+
+    //assign category to product
+    @PatchMapping("/{categoryId}/products/{productId}")
+    public ResponseEntity<ProductDto> assignCategoryToProduct(
+            @PathVariable("productId") String productId,
+            @PathVariable("categoryId") String categoryId
+    ){
+        ProductDto dto = productServiceInterface.assignCategoryToProduct(productId, categoryId);
+        return new ResponseEntity<>(dto,HttpStatus.OK);
+    }
+
+    //get Products of a category
+    @GetMapping("/{categoryId}/products") // can use pageable for more efficiency
+    public ResponseEntity<List<ProductDto>> getProductsOfACategory(
+            @PathVariable("categoryId") String categoryId
+    ){
+        List<ProductDto> allProductsOfACategory = productServiceInterface.getAllProductsOfACategory(categoryId);
+        return new ResponseEntity<>(allProductsOfACategory,HttpStatus.OK);
+    }
 }

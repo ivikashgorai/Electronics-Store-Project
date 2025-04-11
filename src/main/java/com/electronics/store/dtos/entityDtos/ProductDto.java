@@ -1,7 +1,5 @@
 package com.electronics.store.dtos.entityDtos;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -17,7 +15,6 @@ public class ProductDto {
 
 
     private String productId;
-
     @NotBlank(message = "Title required")
     @Size(min = 3,max = 30)
     private String title;
@@ -31,4 +28,6 @@ public class ProductDto {
     private boolean live;
     private boolean stock;
     private String productImageName;
+    private CategoryDto category; // product fetch karenge toh category bhi aye
+    //remember -> use dto inside Dto entities
 }

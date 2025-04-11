@@ -1,9 +1,7 @@
 package com.electronics.store.services.category_service;
 
 import com.electronics.store.dtos.entityDtos.CategoryDto;
-import com.electronics.store.dtos.entityDtos.UserDto;
 import com.electronics.store.dtos.paging_response.PageableResponse;
-import com.electronics.store.entities.Category;
 
 import java.util.List;
 
@@ -26,4 +24,5 @@ public interface CategoryServiceInterface {
 
     //search
     List<CategoryDto> getCategoryByTitle(String keyword);
+
 }
