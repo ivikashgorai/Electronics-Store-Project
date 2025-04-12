@@ -14,6 +14,8 @@ import java.util.List;
 @Builder
 public class CartDto {
 
+    private String cartId;
+
     private Date createdAt;
 
     private UserDto user;

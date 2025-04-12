@@ -3,9 +3,6 @@ package com.electronics.store.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,7 +23,7 @@ public class CartItem {
 
     private int quantity;
 
-    private int productPrice; //price of one product
+    private int totalPrice; //price of one product
 
     //mapping for this cart item belong to which cart
     @ManyToOne(fetch = FetchType.LAZY) //but sare cart items ek cart se belong kar sakte hai

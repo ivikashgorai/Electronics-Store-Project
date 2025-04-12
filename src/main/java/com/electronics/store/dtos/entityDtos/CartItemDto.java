@@ -1,6 +1,5 @@
 package com.electronics.store.dtos.entityDtos;
 
-import com.electronics.store.entities.Cart;
 import lombok.*;
 
 @Getter
@@ -14,7 +13,6 @@ public class CartItemDto {
 
     private int quantity;
 
-    private int productPrice;
-
+    private int totalPrice;
     //item ke andar cart nhi chahiye so no cart here
 }
