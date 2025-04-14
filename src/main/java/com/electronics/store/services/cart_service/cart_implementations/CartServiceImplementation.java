@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -44,63 +45,54 @@ public class CartServiceImplementation implements CartServiceInterface {
 
     @Override
     public CartDto addItemToCart(String userId, AddItemToCartRequest request) {
-        // Validate input
         if (request.getQuantity() <= 0) {
             throw new BadApiRequestException("Quantity should be more than zero");
         }
 
-        // Fetch entities
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        // Get or create cart
-        Cart cart = null;
-       try{
-           cart = cartRepository.findByUser(user).get();
-       }
-       catch (NoSuchElementException e){
-           cart = new Cart();
-           cart.setCreatedAt(new Date());
-           cart.setCartId(UUID.randomUUID().toString());
-       }
+        Cart cart = cartRepository.findByUser(user).orElseGet(() -> {
+            Cart newCart = new Cart();
+            newCart.setCreatedAt(new Date());
+            newCart.setCartId(UUID.randomUUID().toString());
+            newCart.setCartItems(new HashSet<>());
+            return newCart;
+        });
 
-        AtomicReference<Boolean> updated = new AtomicReference<>();//use this inside map
-        updated.set(false);
-      List<CartItem> items = cart.getCartItems();
+        Set<CartItem> items = cart.getCartItems();
+        AtomicBoolean updated = new AtomicBoolean(false);
 
-        //if cart item already present then update quantity and price
-        List<CartItem> updatedList = items.stream().map(item -> {
-                    if (item.getProduct().getProductId().equals(product.getProductId())) {
-                        //item already present in cart
-                        item.setQuantity(item.getQuantity() + request.getQuantity());
-                        item.setTotalPrice(item.getQuantity() * product.getPrice());
-                        updated.set(true);
-                    }
-                    return item;
-                }
+        Set<CartItem> updatedItems = items.stream().map(item -> {
+            if (item.getProduct().getProductId().equals(product.getProductId())) {
+                item.setQuantity(item.getQuantity() + request.getQuantity());
+                item.setTotalPrice(item.getQuantity() * product.getPrice());
+                updated.set(true);
+            }
+            return item;
+        }).collect(Collectors.toSet());
 
-        ).collect(Collectors.toList());
+        cart.setCartItems(updatedItems);
 
-        cart.setCartItems(updatedList);
-
-        if(!updated.get()) {
-            CartItem cartItem = CartItem.builder()
-                    .quantity(product.getQuantity())
-                    .totalPrice(product.getPrice())
-                    .cart(cart)
+        if (!updated.get()) {
+            CartItem newItem = CartItem.builder()
+                    .quantity(request.getQuantity())
+                    .totalPrice(product.getPrice() * request.getQuantity())
                     .product(product)
+                    .cart(cart)
                     .build();
-            cart.getCartItems().add(cartItem);
+            cart.getCartItems().add(newItem);
         }
 
         cart.setUser(user);
         Cart updatedCart = cartRepository.save(cart);
         Hibernate.initialize(updatedCart.getCartItems());
-        return mapper.map(updatedCart,CartDto.class);
+        return mapper.map(updatedCart, CartDto.class);
     }
+
 
 
 

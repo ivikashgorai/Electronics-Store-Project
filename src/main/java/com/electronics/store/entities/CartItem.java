@@ -16,9 +16,9 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto. increment hoga
     private int cartItemId;
 
-    @OneToOne // one directional mapping will be here
+    @ManyToOne(fetch = FetchType.LAZY) // many cart item can have same product
     //this means will want to know only which product is in this cart item,
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id",nullable = false)
     private Product product;
 
     private int quantity;
