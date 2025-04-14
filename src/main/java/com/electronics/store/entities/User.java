@@ -3,6 +3,8 @@ package com.electronics.store.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 
 //using lombok for getter setter and constructor
 @Getter
@@ -29,5 +31,6 @@ public class User {
     @Column(name="user_image_name") // profile image name
     private String imageName;
 
-
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)//user delete ho toh order delete ho jaye
+    private List<Order> order;
 }
