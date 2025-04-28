@@ -20,10 +20,10 @@ public class OrderItem {
     private int totalPrice;
 
     @ManyToOne //bhut sara order item mein same product ho sakta hai
-    @JoinColumn(name="product_id",nullable = false,unique = false)
+    @JoinColumn(name="product_id")
     private Product product;
 
     @ManyToOne
-    @JoinColumn(name="order_id",nullable = false)
+    @JoinColumn(name="order_id")
     private Order order;
 }
