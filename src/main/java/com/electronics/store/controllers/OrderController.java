@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class OrderController {
     @Autowired
     private OrderServiceInterface orderServiceInterface;
 
+    @PreAuthorize("hasAnyRole('NORMAL','ADMIN')") // method level security  NORMAL,ADMIN user can access
     @PostMapping("/cart/{cartId}/user/{userId}")
     public ResponseEntity<OrderDto> createOrder(
             @Valid
@@ -30,6 +32,7 @@ public class OrderController {
         return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{orderId}")
     public ResponseEntity<ApiResponseMessage> removeOrder(
             @PathVariable("orderId") String orderId
@@ -38,6 +41,7 @@ public class OrderController {
         return new ResponseEntity<>(ApiResponseMessage.builder().message("deleted succesfully").success(true).status(HttpStatus.OK).build(),HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('NORMAL','ADMIN')")
     @GetMapping("/{userId}")
     public ResponseEntity<List<OrderDto>> getOrdersOfUser(
             @PathVariable("userId") String userId
@@ -46,6 +50,7 @@ public class OrderController {
         return new ResponseEntity<>(allOrderOfUser,HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<OrderDto>> getOrders(
     ){
