@@ -2,8 +2,10 @@ package com.electronics.store.services.user_service.user_implementations;
 
 import com.electronics.store.dtos.paging_response.PageableResponse;
 import com.electronics.store.dtos.entityDtos.UserDto;
+import com.electronics.store.entities.Role;
 import com.electronics.store.entities.User;
 import com.electronics.store.exceptions.ResourceNotFoundException;
+import com.electronics.store.repositories.RoleRepository;
 import com.electronics.store.repositories.UserRepository;
 import com.electronics.store.services.user_service.UserServiceInterface;
 import com.electronics.store.utility.Helper;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -30,7 +33,13 @@ import java.util.UUID;
 public class UserServiceImplementation implements UserServiceInterface {
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -42,9 +51,17 @@ public class UserServiceImplementation implements UserServiceInterface {
     public UserDto createUser(UserDto userDto) {
 //        userRepository.save(userDto); gives error as repo want User not UserDto, so we have to convert from dto to entity and then entity to dto
         //get random Id
-        String userId = UUID.randomUUID().toString();
-        userDto.setUserId(userId);
         User user = dtoToEntity(userDto);
+        String userId = UUID.randomUUID().toString();
+        user.setUserId(userId);
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        List<Role> role = user.getRoles();
+        //be default every user will have NORMAL role
+        Role normal = new Role();
+        normal.setId(UUID.randomUUID().toString());
+        normal.setName("ROLE_NORMAL");
+        role.add(roleRepository.findByName("ROLE_NORMAL").orElse(normal)); // by default
+        user.setRoles(role);
         User savedUser = userRepository.save(user);
         UserDto newDto = entityToDto(savedUser);
         return newDto;

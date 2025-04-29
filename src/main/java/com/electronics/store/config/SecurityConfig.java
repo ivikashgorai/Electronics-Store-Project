@@ -35,8 +35,9 @@ public class SecurityConfig {
             request.requestMatchers(HttpMethod.DELETE,"/users/**").hasRole("ADMIN")
                     // admin and normal users can access all put methods starting from /users/ url
                     .requestMatchers(HttpMethod.PUT,"/users/**").hasAnyRole("ADMIN","NORMAL")
-                    .requestMatchers(HttpMethod.GET,"/products/**").permitAll()
+                    .requestMatchers(HttpMethod.POST,"/users/**").permitAll()
                     .requestMatchers(HttpMethod.GET,"/users/**").permitAll()
+                    .requestMatchers(HttpMethod.GET,"/products").permitAll()
                     .requestMatchers(HttpMethod.GET,"/categories/**").permitAll()
                     .requestMatchers("/categories/**").hasRole("ADMIN")
         );

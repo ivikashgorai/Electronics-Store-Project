@@ -1,10 +1,14 @@
 package com.electronics.store.dtos.entityDtos;
 
+import com.electronics.store.entities.Role;
 import com.electronics.store.validate.ImageNameValid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -34,6 +38,6 @@ public class UserDto {
     @ImageNameValid
     private String imageName;
 
-
+    private List<RoleDto> roles = new ArrayList<>();
 
 }
