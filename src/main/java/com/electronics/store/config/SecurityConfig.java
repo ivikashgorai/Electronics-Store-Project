@@ -38,8 +38,10 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.POST,"/users/**").permitAll()
                     .requestMatchers(HttpMethod.GET,"/users/**").permitAll()
                     .requestMatchers(HttpMethod.GET,"/products").permitAll()
+                    .requestMatchers(HttpMethod.POST,"/products").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.GET,"/categories/**").permitAll()
                     .requestMatchers("/categories/**").hasRole("ADMIN")
+                    .anyRequest().permitAll() // should be here , so that method level security will work
         );
         httpSecurity.httpBasic(Customizer.withDefaults());
         return httpSecurity.build();

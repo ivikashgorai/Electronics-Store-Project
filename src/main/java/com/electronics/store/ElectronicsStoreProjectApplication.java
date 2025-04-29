@@ -54,7 +54,7 @@ public class ElectronicsStoreProjectApplication implements CommandLineRunner {
 		if(!adminUser){
 			User user = new User();
 			user.setName("Vikash");
-			user.setEmail("vikashwork321@gmail.com");
+			user.setEmail("vikashwork321@gmail.com"); //username is email here
 			user.setGender("M");
 			user.setImageName("vikash.png");
 			user.setPassword(passwordEncoder.encode("Vikash"));
