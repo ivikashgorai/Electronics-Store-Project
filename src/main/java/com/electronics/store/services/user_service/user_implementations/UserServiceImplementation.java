@@ -54,7 +54,6 @@ public class UserServiceImplementation implements UserServiceInterface {
         User user = dtoToEntity(userDto);
         String userId = UUID.randomUUID().toString();
         user.setUserId(userId);
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         List<Role> role = user.getRoles();
         //be default every user will have NORMAL role
         Role normal = new Role();
@@ -76,8 +75,6 @@ public class UserServiceImplementation implements UserServiceInterface {
         user.setName(userDto.getName());
         user.setGender(userDto.getGender());
         user.setAbout(userDto.getAbout());
-        user.setPassword(userDto.getPassword());
-        user.setImageName(userDto.getImageName());
         userRepository.save(user);
         return entityToDto(user);
     }

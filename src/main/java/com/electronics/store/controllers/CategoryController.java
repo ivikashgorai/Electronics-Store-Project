@@ -5,6 +5,7 @@ import com.electronics.store.dtos.entityDtos.ProductDto;
 import com.electronics.store.dtos.paging_response.PageableResponse;
 import com.electronics.store.dtos.response_message.ApiResponseMessage;
 import com.electronics.store.dtos.response_message.ImageResponseMessage;
+import com.electronics.store.security.JwtHelper;
 import com.electronics.store.services.category_service.CategoryServiceInterface;
 import com.electronics.store.services.file_service.FileServiceInterface;
 import com.electronics.store.services.product_service.ProductServiceInterface;
@@ -35,6 +36,7 @@ public class CategoryController {
 
     @Autowired
     private FileServiceInterface fileServiceInterface;
+
 
     @Value("${category.cover.image.path}") // from application.properties
     private String imageUploadPath;

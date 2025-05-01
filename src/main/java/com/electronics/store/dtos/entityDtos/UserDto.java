@@ -26,8 +26,6 @@ public class UserDto {
     @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",message = "Invalid User email")
     private String email;
 
-    @NotBlank
-    private String password;
 
     @Pattern(regexp = "^[MF]$",message = "gender must be M or F")
     private String gender;
