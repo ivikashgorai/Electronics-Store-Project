@@ -54,7 +54,7 @@ public class SecurityConfig {
 
         //later learning cors and csrf, currently disabling it
 //        httpSecurity.cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.disable());
-//        httpSecurity.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
+        httpSecurity.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable()); // not required in jwt token base auth.
 
                 httpSecurity.cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(
                         new CorsConfigurationSource() {

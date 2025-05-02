@@ -1,15 +1,14 @@
 package com.electronics.store.security;
 
-import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import io.jsonwebtoken.Claims;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.crypto.SecretKey;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,14 +21,14 @@ import java.util.function.Function;
 @Configuration
 public class JwtHelper {
 
-    @Value("${jwt.secret}")
-    private static String secret;
+
+
 
     //1.validity
     public static final long TOKEN_VALIDITY = 5*60*1000; // 5 minutes in ms
 
     //2.secret key
-    public static final String SECRET_KEY = secret;
+    public final String SECRET_KEY = "duabhouzbgaciygbaidbiuyvcsiabkljnaczbviasblcjbOBosbOJKbscibviScbikhcnolbcibciKb";
 
     //retrieve username from token
     public String getUsernameFromToken(String token){
