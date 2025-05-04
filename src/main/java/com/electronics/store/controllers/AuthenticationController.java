@@ -11,6 +11,8 @@ import com.electronics.store.exceptions.ResourceNotFoundException;
 import com.electronics.store.repositories.UserRepository;
 import com.electronics.store.security.JwtHelper;
 import com.electronics.store.services.implementations.RefreshTokenImplementation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +77,7 @@ public class AuthenticationController {
 
     //method to generate token
     @PostMapping("/login")
+    @Operation(summary = "User login", security = @SecurityRequirement(name = ""))
     public ResponseEntity<JwtResponse> login(
             @RequestBody JwtRequest jwtRequest
             ){

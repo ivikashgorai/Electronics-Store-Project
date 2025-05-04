@@ -6,6 +6,8 @@ import com.electronics.store.dtos.response_message.ApiResponseMessage;
 import com.electronics.store.dtos.response_message.ImageResponseMessage;
 import com.electronics.store.services.Interfaces.FileServiceInterface;
 import com.electronics.store.services.Interfaces.ProductServiceInterface;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +36,13 @@ public class ProductController {
     private String imageUploadPath;
 
     //create
+
     @PostMapping
+    @Operation(
+            summary = "Create a new product",
+            description = "Requires JWT token",
+            security = @SecurityRequirement(name = "bearer-jwt")
+    ) // for security, declaring to swagger that this endpoint contains security so it will take token
     public ResponseEntity<ProductDto> createProduct(
             @Valid
             @RequestBody ProductDto productDto

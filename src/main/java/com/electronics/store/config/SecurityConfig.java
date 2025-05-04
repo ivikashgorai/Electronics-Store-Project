@@ -44,10 +44,18 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
+    public final String[] PUBLIC_URLS = {
+            "/swagger-ui/**",
+            "/webjars/**",
+            "/swagger-resources/**",
+            "/v3/api-docs/**"
+    };
+
     private final AccessDeniedHandler customAccessDeniedHandler; // for custom meesage when any other than authorized role try to aceess the api
     public SecurityConfig(AccessDeniedHandler customAccessDeniedHandler) {
         this.customAccessDeniedHandler = customAccessDeniedHandler;
     }
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
@@ -78,7 +86,8 @@ public class SecurityConfig {
         // Authorization rules are evaluated in the sequence they are declared, and the first matching rule is applied.
         httpSecurity.authorizeHttpRequests( request->
             // only admin can access all delete methods starting from /users/ url
-            request.requestMatchers(HttpMethod.DELETE,"/users/**").hasRole("ADMIN")
+            request.requestMatchers(PUBLIC_URLS).permitAll()
+                    .requestMatchers(HttpMethod.DELETE,"/users/**").hasRole("ADMIN")
                     // admin and normal users can access all put methods starting from /users/ url
                     .requestMatchers(HttpMethod.PUT,"/users/**").hasAnyRole("ADMIN","NORMAL")
                     .requestMatchers(HttpMethod.POST,"/users/**").permitAll()

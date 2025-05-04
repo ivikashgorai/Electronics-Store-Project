@@ -4,8 +4,15 @@ import com.electronics.store.dtos.response_message.ApiResponseMessage;
 import com.electronics.store.dtos.response_message.ImageResponseMessage;
 import com.electronics.store.dtos.paging_response.PageableResponse;
 import com.electronics.store.dtos.entityDtos.UserDto;
+import com.electronics.store.entities.User;
 import com.electronics.store.services.Interfaces.FileServiceInterface;
 import com.electronics.store.services.Interfaces.UserServiceInterface;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +28,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+@Tag(name = "User Management", description = "Operations related to user management") //swagger api, like this we can give info about controller
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -34,6 +42,17 @@ public class UserController {
     @Value("${user.profile.image.path}") // from application.properties
     private String imageUploadPath;
 
+
+    @Operation(  // for setting info about endpoint
+            summary = "Create a new User",
+            description = "Called when new user get sign up",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "User to be added",
+                    content = @Content(
+                            schema = @Schema(implementation = UserDto.class)
+                    )
+            )
+    )
     @PostMapping //create
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto){ //@valid for validation of data coming
       UserDto user =  userServiceInterface.createUser(userDto);
