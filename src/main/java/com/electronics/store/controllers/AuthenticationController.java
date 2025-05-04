@@ -1,5 +1,7 @@
 package com.electronics.store.controllers;
 
+import com.electronics.store.dtos.entityDtos.RefreshTokenDto;
+import com.electronics.store.dtos.entityDtos.RoleDto;
 import com.electronics.store.dtos.entityDtos.UserDto;
 import com.electronics.store.dtos.token_request_response.JwtRequest;
 import com.electronics.store.dtos.token_request_response.JwtResponse;
@@ -8,6 +10,7 @@ import com.electronics.store.entities.User;
 import com.electronics.store.exceptions.ResourceNotFoundException;
 import com.electronics.store.repositories.UserRepository;
 import com.electronics.store.security.JwtHelper;
+import com.electronics.store.services.implementations.RefreshTokenImplementation;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +48,32 @@ public class AuthenticationController {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    //method to generate token
+    @Autowired
+    private RefreshTokenImplementation refreshTokenImplementation;
 
+    //method to refresh token
+    @PostMapping("/refresh-token/{token}")
+    public ResponseEntity<JwtResponse> refreshToken(
+            @PathVariable String token
+    ){
+        RefreshTokenDto refreshTokenDto = refreshTokenImplementation.findByToken(token);
+        RefreshTokenDto refreshTokenDto1 = refreshTokenImplementation.verifyRefreshToken(refreshTokenDto);
+        UserDto userDto = refreshTokenImplementation
+                .getUser(refreshTokenDto1);
+
+        String token1 = jwtHelper
+                .generateToken(modelMapper.map(userDto, User.class)
+                        , userDto.getRoles().stream().map(RoleDto::getName).collect(Collectors.toSet()).toString());
+
+        JwtResponse jwtResponse = JwtResponse.builder()
+                .user(userDto)
+                .refreshToken(refreshTokenDto)
+                .token(token1).build();
+
+        return  ResponseEntity.ok(jwtResponse);
+    }
+
+    //method to generate token
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(
             @RequestBody JwtRequest jwtRequest
@@ -54,7 +81,9 @@ public class AuthenticationController {
             this.doAuthenticate(jwtRequest.getEmail(),jwtRequest.getPassword());
            User user = (User) userDetailsService.loadUserByUsername(jwtRequest.getEmail());
          String token = jwtHelper.generateToken(user, user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()).toString());
-          JwtResponse jwtResponse = JwtResponse.builder().token(token).user(modelMapper.map(user, UserDto.class)).build();
+
+        RefreshTokenDto refreshToken = refreshTokenImplementation.createRefreshToken(jwtRequest.getEmail());
+        JwtResponse jwtResponse = JwtResponse.builder().token(token).user(modelMapper.map(user, UserDto.class)).refreshToken(refreshToken).build();
         return ResponseEntity.ok(jwtResponse);
     }
 

@@ -45,6 +45,7 @@ public class User implements UserDetails {
     private List<Role> roles = new ArrayList<>();
 
 
+
     @Override // yaha role jayega
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<SimpleGrantedAuthority> simpleGrantedAuthorities = roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toSet());

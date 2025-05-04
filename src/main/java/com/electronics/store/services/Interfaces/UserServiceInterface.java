@@ -1,4 +1,4 @@
-package com.electronics.store.services.user_service;
+package com.electronics.store.services.Interfaces;
 
 import com.electronics.store.dtos.paging_response.PageableResponse;
 import com.electronics.store.dtos.entityDtos.UserDto;

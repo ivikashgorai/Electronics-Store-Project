@@ -1,4 +1,4 @@
-package com.electronics.store.services.category_service;
+package com.electronics.store.services.Interfaces;
 
 import com.electronics.store.dtos.entityDtos.CategoryDto;
 import com.electronics.store.dtos.paging_response.PageableResponse;

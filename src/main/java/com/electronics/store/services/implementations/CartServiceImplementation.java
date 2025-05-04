@@ -1,4 +1,4 @@
-package com.electronics.store.services.cart_service.cart_implementations;
+package com.electronics.store.services.implementations;
 
 import com.electronics.store.dtos.AddItemToCartRequest;
 import com.electronics.store.dtos.entityDtos.CartDto;
@@ -12,7 +12,7 @@ import com.electronics.store.repositories.CartItemRepository;
 import com.electronics.store.repositories.CartRepository;
 import com.electronics.store.repositories.ProductRepository;
 import com.electronics.store.repositories.UserRepository;
-import com.electronics.store.services.cart_service.CartServiceInterface;
+import com.electronics.store.services.Interfaces.CartServiceInterface;
 import org.hibernate.Hibernate;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service

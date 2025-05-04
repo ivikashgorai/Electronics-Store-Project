@@ -1,4 +1,4 @@
-package com.electronics.store.services.user_service.user_implementations;
+package com.electronics.store.services.implementations;
 
 import com.electronics.store.dtos.paging_response.PageableResponse;
 import com.electronics.store.dtos.entityDtos.UserDto;
@@ -7,7 +7,7 @@ import com.electronics.store.entities.User;
 import com.electronics.store.exceptions.ResourceNotFoundException;
 import com.electronics.store.repositories.RoleRepository;
 import com.electronics.store.repositories.UserRepository;
-import com.electronics.store.services.user_service.UserServiceInterface;
+import com.electronics.store.services.Interfaces.UserServiceInterface;
 import com.electronics.store.utility.Helper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

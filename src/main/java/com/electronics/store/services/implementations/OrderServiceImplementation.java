@@ -1,7 +1,6 @@
-package com.electronics.store.services.order_service.order_implementations;
+package com.electronics.store.services.implementations;
 
 import com.electronics.store.dtos.entityDtos.OrderDto;
-import com.electronics.store.dtos.entityDtos.OrderItemDto;
 import com.electronics.store.entities.*;
 import com.electronics.store.exceptions.BadApiRequestException;
 import com.electronics.store.exceptions.ResourceNotFoundException;
@@ -9,14 +8,13 @@ import com.electronics.store.repositories.CartRepository;
 import com.electronics.store.repositories.OrderItemRepository;
 import com.electronics.store.repositories.OrderRepository;
 import com.electronics.store.repositories.UserRepository;
-import com.electronics.store.services.order_service.OrderServiceInterface;
+import com.electronics.store.services.Interfaces.OrderServiceInterface;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Primary

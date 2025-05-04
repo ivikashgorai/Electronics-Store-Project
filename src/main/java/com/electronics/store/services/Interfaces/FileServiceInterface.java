@@ -1,4 +1,4 @@
-package com.electronics.store.services.file_service;
+package com.electronics.store.services.Interfaces;
 
 import org.springframework.web.multipart.MultipartFile;
 

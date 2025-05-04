@@ -1,15 +1,11 @@
-package com.electronics.store.services.category_service.category_implementations;
+package com.electronics.store.services.implementations;
 
 import com.electronics.store.dtos.entityDtos.CategoryDto;
-import com.electronics.store.dtos.entityDtos.UserDto;
 import com.electronics.store.dtos.paging_response.PageableResponse;
-import com.electronics.store.dtos.response_message.ApiResponseMessage;
 import com.electronics.store.entities.Category;
-import com.electronics.store.entities.User;
-import com.electronics.store.exceptions.BadApiRequestException;
 import com.electronics.store.exceptions.ResourceNotFoundException;
 import com.electronics.store.repositories.CategoryRepository;
-import com.electronics.store.services.category_service.CategoryServiceInterface;
+import com.electronics.store.services.Interfaces.CategoryServiceInterface;
 import com.electronics.store.utility.Helper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

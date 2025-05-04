@@ -1,7 +1,7 @@
-package com.electronics.store.services.file_service.file_implementations;
+package com.electronics.store.services.implementations;
 
 import com.electronics.store.exceptions.BadApiRequestException;
-import com.electronics.store.services.file_service.FileServiceInterface;
+import com.electronics.store.services.Interfaces.FileServiceInterface;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

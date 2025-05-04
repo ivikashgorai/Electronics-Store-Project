@@ -87,7 +87,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.POST,"/products").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.POST,"/categories").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.GET,"/categories/**").permitAll()
-                    .requestMatchers(HttpMethod.POST,"auth/login").permitAll()
+                    .requestMatchers(HttpMethod.POST,"auth/**").permitAll()
                     .requestMatchers("auth/**").authenticated()
                     .anyRequest().permitAll() // should be here, so that method level security will work
 

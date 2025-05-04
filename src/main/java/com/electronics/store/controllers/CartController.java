@@ -3,7 +3,7 @@ package com.electronics.store.controllers;
 import com.electronics.store.dtos.AddItemToCartRequest;
 import com.electronics.store.dtos.entityDtos.CartDto;
 import com.electronics.store.dtos.response_message.ApiResponseMessage;
-import com.electronics.store.services.cart_service.CartServiceInterface;
+import com.electronics.store.services.Interfaces.CartServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

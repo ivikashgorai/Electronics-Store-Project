@@ -1,4 +1,4 @@
-package com.electronics.store.services.product_service.product_implementations;
+package com.electronics.store.services.implementations;
 
 import com.electronics.store.dtos.entityDtos.ProductDto;
 import com.electronics.store.dtos.paging_response.PageableResponse;
@@ -7,7 +7,7 @@ import com.electronics.store.entities.Product;
 import com.electronics.store.exceptions.ResourceNotFoundException;
 import com.electronics.store.repositories.CategoryRepository;
 import com.electronics.store.repositories.ProductRepository;
-import com.electronics.store.services.product_service.ProductServiceInterface;
+import com.electronics.store.services.Interfaces.ProductServiceInterface;
 import com.electronics.store.utility.Helper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

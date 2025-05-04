@@ -2,11 +2,10 @@ package com.electronics.store.controllers;
 
 import com.electronics.store.dtos.entityDtos.OrderDto;
 import com.electronics.store.dtos.response_message.ApiResponseMessage;
-import com.electronics.store.services.order_service.OrderServiceInterface;
+import com.electronics.store.services.Interfaces.OrderServiceInterface;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

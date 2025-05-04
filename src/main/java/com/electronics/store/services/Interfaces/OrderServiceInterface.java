@@ -1,8 +1,6 @@
-package com.electronics.store.services.order_service;
+package com.electronics.store.services.Interfaces;
 
 import com.electronics.store.dtos.entityDtos.OrderDto;
-import com.electronics.store.entities.Order;
-import com.electronics.store.entities.OrderItem;
 
 import java.util.List;
 

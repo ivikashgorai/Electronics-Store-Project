@@ -1,5 +1,6 @@
 package com.electronics.store.dtos.token_request_response;
 
+import com.electronics.store.dtos.entityDtos.RefreshTokenDto;
 import com.electronics.store.dtos.entityDtos.UserDto;
 import lombok.*;
 
@@ -12,5 +13,5 @@ public class JwtResponse {
 
     private String token;
     UserDto user;
-    private String refreshToken;
+    private RefreshTokenDto refreshToken;
 }

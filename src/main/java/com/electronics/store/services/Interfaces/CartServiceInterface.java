@@ -1,4 +1,4 @@
-package com.electronics.store.services.cart_service;
+package com.electronics.store.services.Interfaces;
 
 import com.electronics.store.dtos.AddItemToCartRequest;
 import com.electronics.store.dtos.entityDtos.CartDto;
