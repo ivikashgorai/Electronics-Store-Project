@@ -43,7 +43,7 @@ public class UserController {
     private String imageUploadPath;
 
 
-    @Operation(  // for setting info about endpoint
+    @Operation(  // for setting info about endpoint -> swagger
             summary = "Create a new User",
             description = "Called when new user get sign up",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(

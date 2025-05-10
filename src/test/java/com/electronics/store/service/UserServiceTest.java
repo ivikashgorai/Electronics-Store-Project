@@ -30,7 +30,7 @@ public class UserServiceTest {
     @Autowired
     private ModelMapper mapper;
 
-    @MockitoBean // dont use mock when using @Autowired in dependecnt service
+    @MockitoBean // dont use mock when using @Autowired which come in spring context )in dependent service
     private UserRepository userRepository;
 
     @MockitoBean
