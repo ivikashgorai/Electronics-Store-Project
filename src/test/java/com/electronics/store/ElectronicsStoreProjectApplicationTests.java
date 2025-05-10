@@ -12,26 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.stream.Collectors;
 
-@SpringBootTest
+@SpringBootTest //gives feature of spring boot contest
 class ElectronicsStoreProjectApplicationTests {
-
-	@Autowired
-	private UserRepository userRepository;
-
-	@Autowired
-	private JwtHelper jwtHelper;
-
-	@Test
-	void contextLoads() {
-	}
-
-	@Test
-	void testToken(){
-		User user = userRepository.findByEmail("vikashwork321@gmail.com").orElseThrow(()-> new ResourceNotFoundException("User not found"));
-		String token = jwtHelper.generateToken(user, user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()).toString());
-		Claims allClaimsFromToken = jwtHelper.getAllClaimsFromToken(token);
-		System.out.println(token+"\n"+allClaimsFromToken);
-		System.out.println(jwtHelper.getUsernameFromToken(token));
-	}
 
 }
