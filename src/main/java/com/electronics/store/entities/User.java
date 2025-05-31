@@ -41,22 +41,25 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)//user delete ho toh order delete ho jaye
     private List<Order> order;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"),
-            uniqueConstraints = {
-                    @UniqueConstraint(columnNames = {"user_id", "role_id"}) // this creates a composite PK
-            }
-    )
-    private List<Role> roles = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    private List<UserRole> userRoles = new ArrayList<>();
+
+    // convenience: return roles directly
+    public List<Role> getRoles() {
+        return userRoles.stream()
+                .map(UserRole::getRole)
+                .toList();
+    }
 
 
 
     @Override // yaha role jayega
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<SimpleGrantedAuthority> simpleGrantedAuthorities = roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toSet());
+        Set<SimpleGrantedAuthority> simpleGrantedAuthorities = getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toSet());
         return simpleGrantedAuthorities;
     }
 
