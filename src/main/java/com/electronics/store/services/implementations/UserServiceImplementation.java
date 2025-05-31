@@ -4,9 +4,12 @@ import com.electronics.store.dtos.paging_response.PageableResponse;
 import com.electronics.store.dtos.entityDtos.UserDto;
 import com.electronics.store.entities.Role;
 import com.electronics.store.entities.User;
+import com.electronics.store.entities.UserRole;
+import com.electronics.store.entities.UserRoleId;
 import com.electronics.store.exceptions.ResourceNotFoundException;
 import com.electronics.store.repositories.RoleRepository;
 import com.electronics.store.repositories.UserRepository;
+import com.electronics.store.repositories.UserRoleRepository;
 import com.electronics.store.services.Interfaces.UserServiceInterface;
 import com.electronics.store.utility.Helper;
 import org.modelmapper.ModelMapper;
@@ -42,29 +45,43 @@ public class UserServiceImplementation implements UserServiceInterface {
     private RoleRepository roleRepository;
 
     @Autowired
+    private UserRoleRepository userRoleRepository;
+
+    @Autowired
     private ModelMapper modelMapper;
 
     @Value("${user.profile.image.path}")
     private String imagePath;
 
-    @Override
     public UserDto createUser(UserDto userDto) {
-//        userRepository.save(userDto); gives error as repo want User not UserDto, so we have to convert from dto to entity and then entity to dto
-        //get random Id
         User user = dtoToEntity(userDto);
-        String userId = UUID.randomUUID().toString();
-        user.setUserId(userId);
-        List<Role> role = user.getRoles();
-        //be default every user will have NORMAL role
-        Role normal = new Role();
-        normal.setId(UUID.randomUUID().toString());
-        normal.setName("ROLE_NORMAL");
-        role.add(roleRepository.findByName("ROLE_NORMAL").orElse(normal)); // by default
-        user.setRoles(role);
+        user.setUserId(UUID.randomUUID().toString());
+
+        // Save the user first so we can use it in the join
         User savedUser = userRepository.save(user);
-        UserDto newDto = entityToDto(savedUser);
-        return newDto;
+
+        // Find or create the ROLE_NORMAL
+        Role normalRole = roleRepository.findByName("ROLE_NORMAL")
+                .orElseGet(() -> {
+                    Role newRole = new Role();
+                    newRole.setId(UUID.randomUUID().toString());
+                    newRole.setName("ROLE_NORMAL");
+                    return roleRepository.save(newRole);
+                });
+
+        // Create and assign UserRole
+        UserRole userRole = UserRole.builder()
+                .id(new UserRoleId(savedUser.getUserId(), normalRole.getId()))
+                .user(savedUser)
+                .role(normalRole)
+                .build();
+
+        // You need a UserRoleRepository to save this
+        userRoleRepository.save(userRole);
+
+        return entityToDto(savedUser);
     }
+
 
 
     @Override
