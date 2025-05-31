@@ -41,7 +41,15 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)//user delete ho toh order delete ho jaye
     private List<Order> order;
 
-    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"),
+            uniqueConstraints = {
+                    @UniqueConstraint(columnNames = {"user_id", "role_id"}) // this creates a composite PK
+            }
+    )
     private List<Role> roles = new ArrayList<>();
 
 
