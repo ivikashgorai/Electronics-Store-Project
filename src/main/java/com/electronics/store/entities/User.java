@@ -42,24 +42,14 @@ public class User implements UserDetails {
     private List<Order> order;
 
 
-    @OneToMany(mappedBy = "user",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
-    private List<UserRole> userRoles = new ArrayList<>();
-
-    // convenience: return roles directly
-    public List<Role> getRoles() {
-        return userRoles.stream()
-                .map(UserRole::getRole)
-                .toList();
-    }
+    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    private List<Role> roles = new ArrayList<>();
 
 
 
     @Override // yaha role jayega
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Set<SimpleGrantedAuthority> simpleGrantedAuthorities = getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toSet());
+        Set<SimpleGrantedAuthority> simpleGrantedAuthorities = roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toSet());
         return simpleGrantedAuthorities;
     }
 

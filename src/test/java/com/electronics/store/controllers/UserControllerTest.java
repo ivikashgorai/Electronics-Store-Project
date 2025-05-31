@@ -7,8 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.electronics.store.dtos.entityDtos.UserDto;
 import com.electronics.store.entities.Role;
 import com.electronics.store.entities.User;
-import com.electronics.store.entities.UserRole;
-import com.electronics.store.entities.UserRoleId;
 import com.electronics.store.services.Interfaces.UserServiceInterface;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,15 +52,8 @@ public class UserControllerTest {
                 .gender("M")
                 .imageName("abc.png")
                 .password("vikash")
+                .roles(List.of(role))
                 .build();
-
-        UserRole userRole = UserRole.builder()
-                .id(new UserRoleId(user.getUserId(), role.getId()))
-                .user(user)
-                .role(role)
-                .build();
-
-        user.setUserRoles(List.of(userRole));
     }
 
     @Test

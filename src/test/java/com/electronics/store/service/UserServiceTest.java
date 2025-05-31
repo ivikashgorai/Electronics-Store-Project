@@ -3,8 +3,6 @@ package com.electronics.store.service;
 import com.electronics.store.dtos.entityDtos.UserDto;
 import com.electronics.store.entities.Role;
 import com.electronics.store.entities.User;
-import com.electronics.store.entities.UserRole;
-import com.electronics.store.entities.UserRoleId;
 import com.electronics.store.repositories.RoleRepository;
 import com.electronics.store.repositories.UserRepository;
 import com.electronics.store.services.Interfaces.UserServiceInterface;
@@ -37,7 +35,7 @@ public class UserServiceTest {
     @MockitoBean
     private RoleRepository roleRepository;
 
-//    @InjectMocks //injecting the mock as we dont want to use real repositories
+    //    @InjectMocks //injecting the mock as we dont want to use real repositories
     @Autowired // this uses userRepo. and roleRepo so we dont want it actually so we we will mock it
     private UserServiceInterface userServiceInterface;
 
@@ -46,33 +44,24 @@ public class UserServiceTest {
     String roleId;
 
     @BeforeEach
-    public void init() {
-        role = Role.builder()
+    public void init(){
+        role= Role.builder()
                 .id("abc")
                 .name("ROLE_ADMIN")
                 .build();
 
-        user = User.builder()
+        user =  User.builder()
                 .name("Vikash")
                 .email("vikash@gmail.com")
                 .about("This is testing user")
                 .gender("M")
                 .imageName("abc.png")
                 .password("vikash")
+                .roles(List.of(role))
                 .build();
-
-        // Create the UserRole mapping entity
-        UserRole userRole = UserRole.builder()
-                .id(new UserRoleId(user.getUserId(), role.getId()))
-                .user(user)
-                .role(role)
-                .build();
-
-        user.setUserRoles(List.of(userRole));
 
         roleId = "abc";
     }
-
 
     @Test
     public void createUserTest(){

@@ -21,9 +21,6 @@ public class Role {
     private String name; //ADMIN,NORMAL
 
 
-    @OneToMany(mappedBy = "role",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
-    private List<UserRole> userRoles = new ArrayList<>();
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    private List<User> users = new ArrayList<>();
 }
