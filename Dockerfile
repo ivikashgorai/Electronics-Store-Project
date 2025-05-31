@@ -5,5 +5,6 @@ RUN mvn clean package -DskipTests
 #21 as jdk 21 is used in this project
 FROM eclipse-temurin:21-alpine
 COPY --from=build /target/*.jar demo.jar
+#same port as application.properties
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","demo.jar"]
