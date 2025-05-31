@@ -3,6 +3,8 @@ package com.electronics.store.service;
 import com.electronics.store.dtos.entityDtos.UserDto;
 import com.electronics.store.entities.Role;
 import com.electronics.store.entities.User;
+import com.electronics.store.entities.UserRole;
+import com.electronics.store.entities.UserRoleId;
 import com.electronics.store.repositories.RoleRepository;
 import com.electronics.store.repositories.UserRepository;
 import com.electronics.store.services.Interfaces.UserServiceInterface;
@@ -17,7 +19,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.List;
@@ -45,24 +46,33 @@ public class UserServiceTest {
     String roleId;
 
     @BeforeEach
-    public void init(){
-        role= Role.builder()
+    public void init() {
+        role = Role.builder()
                 .id("abc")
                 .name("ROLE_ADMIN")
                 .build();
 
-       user =  User.builder()
+        user = User.builder()
                 .name("Vikash")
                 .email("vikash@gmail.com")
                 .about("This is testing user")
                 .gender("M")
                 .imageName("abc.png")
                 .password("vikash")
-                .roles(List.of(role))
                 .build();
+
+        // Create the UserRole mapping entity
+        UserRole userRole = UserRole.builder()
+                .id(new UserRoleId(user.getUserId(), role.getId()))
+                .user(user)
+                .role(role)
+                .build();
+
+        user.setUserRoles(List.of(userRole));
 
         roleId = "abc";
     }
+
 
     @Test
     public void createUserTest(){
