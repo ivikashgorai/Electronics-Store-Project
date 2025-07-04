@@ -2,6 +2,7 @@ package com.electronics.store.dtos.entityDtos;
 
 import com.electronics.store.entities.Role;
 import com.electronics.store.validate.ImageNameValid;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -32,6 +33,13 @@ public class UserDto {
 
     @NotBlank(message = "About can't be blank")
     private String about;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Pattern(
+            regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@#$%^&+=!]{6,}$",
+            message = "Password must be at least 6 characters and include numbers"
+    )
+    private String password;
 
     @ImageNameValid
     private String imageName;

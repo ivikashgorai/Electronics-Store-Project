@@ -74,18 +74,30 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             logger.info("Header is null or not start with Bearer");
         }
 
-        if(username!=null && SecurityContextHolder.getContext().getAuthentication()==null){
+        //below
+//        To verify the JWT token on each request and set the logged-in user into Spring Security's context, so the system knows who the user is and what permissions they have.
+        /*✅ First, it checks that:
+            A username was successfully extracted from the JWT token.
+            No user is yet authenticated for this request (i.e., avoid overriding an existing login).*/
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            //Loads the user’s details from your UserDetailsService (which typically fetches from a database).
+            //This gives you the user's password hash, roles, account status, etc.
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
             if (jwtHelper.validateToken(token, userDetails)) {
+//                Creates a Spring Security Authentication object.
+//                userDetails → the authenticated user
+//                null → no password needed (because it's token-based login)
+//                userDetails.getAuthorities() → the user's roles/authorities.
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
+//            Sets additional request details into the authentication token (like IP address, session ID, etc.), which can be useful for auditing.
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//                This is the final step: it puts the Authentication object into the Spring SecurityContext, making the user "logged in" for the current request.
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
 
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
 
     }
 }

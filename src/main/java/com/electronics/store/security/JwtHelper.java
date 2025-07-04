@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import io.jsonwebtoken.Claims;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
@@ -18,7 +19,7 @@ import java.util.function.Function;
 //this is used to perform jwt operations
 
 //jwt generation etc,
-@Configuration
+@Component
 public class JwtHelper {
 
 

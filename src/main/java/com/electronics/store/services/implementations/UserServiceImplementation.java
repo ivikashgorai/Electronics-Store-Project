@@ -61,6 +61,7 @@ public class UserServiceImplementation implements UserServiceInterface {
         normal.setName("ROLE_NORMAL");
         role.add(roleRepository.findByName("ROLE_NORMAL").orElse(normal)); // by default
         user.setRoles(role);
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         User savedUser = userRepository.save(user);
         UserDto newDto = entityToDto(savedUser);
         return newDto;
