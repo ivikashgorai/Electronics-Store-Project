@@ -24,7 +24,6 @@ public class OrderController {
     @Autowired
     private OrderServiceInterface orderServiceInterface;
 
-    @PreAuthorize("hasAnyRole('NORMAL','ADMIN')")
     @PostMapping("/cart/{cartId}/user/{userId}")
     @Operation(summary = "Create a new order for a user and cart")
     public ResponseEntity<OrderDto> createOrder(
@@ -40,7 +39,6 @@ public class OrderController {
         return new ResponseEntity<>(order, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{orderId}")
     @Operation(summary = "Delete an order by ID")
     public ResponseEntity<ApiResponseMessage> removeOrder(
@@ -58,7 +56,6 @@ public class OrderController {
         );
     }
 
-    @PreAuthorize("hasAnyRole('NORMAL','ADMIN')")
     @GetMapping("/{userId}")
     @Operation(summary = "Get all orders of a specific user")
     public ResponseEntity<List<OrderDto>> getOrdersOfUser(
@@ -69,7 +66,6 @@ public class OrderController {
         return new ResponseEntity<>(allOrderOfUser,HttpStatus.OK);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     @Operation(summary = "Get all orders (admin only)")
     public ResponseEntity<List<OrderDto>> getOrders(){
