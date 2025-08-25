@@ -22,7 +22,6 @@ public class CartController {
     @Autowired
     private CartServiceInterface cartServiceInterface;
 
-    @PreAuthorize("hasAnyRole('NORMAL','ADMIN')")
     @PostMapping("/{userId}")
     @Operation(summary = "Add item to cart", description = "Add a new item to the user's cart")
     public ResponseEntity<CartDto> addItemToCart(
@@ -34,7 +33,6 @@ public class CartController {
         return new ResponseEntity<>(cartDto, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAnyRole('NORMAL','ADMIN')")
     @DeleteMapping("/{userId}/cart-item/{cartItemId}")
     @Operation(summary = "Remove item from cart", description = "Remove a specific item from the user's cart")
     public ResponseEntity<ApiResponseMessage> removeItemFromCart(
@@ -45,7 +43,6 @@ public class CartController {
         return new ResponseEntity<>(ApiResponseMessage.builder().message("Item removed").success(true).status(HttpStatus.OK).build(),HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyRole('NORMAL','ADMIN')")
     @DeleteMapping("/{userId}")
     @Operation(summary = "Clear cart", description = "Remove all items from the user's cart")
     public ResponseEntity<ApiResponseMessage> clearCart(
@@ -55,7 +52,6 @@ public class CartController {
         return new ResponseEntity<>(ApiResponseMessage.builder().message("Cart cleared").success(true).status(HttpStatus.OK).build(),HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyRole('NORMAL','ADMIN')")
     @GetMapping("/{userId}")
     @Operation(summary = "Get cart of user", description = "Fetch the current cart of the user")
     public ResponseEntity<CartDto> getCartOfUser(
