@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("auth/")
+@RequestMapping("/auth")
 public class AuthenticationController {
 
     @Autowired
