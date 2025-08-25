@@ -8,6 +8,10 @@ import com.electronics.store.dtos.response_message.ImageResponseMessage;
 import com.electronics.store.services.Interfaces.CategoryServiceInterface;
 import com.electronics.store.services.Interfaces.FileServiceInterface;
 import com.electronics.store.services.Interfaces.ProductServiceInterface;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+@Tag(name = "Category Management", description = "Operations related to categories and category products")
 @RestController
 @RequestMapping("/categories")
 public class CategoryController {
@@ -36,45 +41,47 @@ public class CategoryController {
     @Autowired
     private FileServiceInterface fileServiceInterface;
 
-
-    @Value("${category.cover.image.path}") // from application.properties
+    @Value("${category.cover.image.path}")
     private String imageUploadPath;
 
-    //create
     @PostMapping
+    @Operation(summary = "Create a new category", description = "Create a new category with validation")
     public ResponseEntity<CategoryDto> createCategory(
-            @Valid // for api data validation
-            @RequestBody
-            CategoryDto categoryDto
+            @Valid @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Category details")
+            @RequestBody CategoryDto categoryDto
     ){
-       CategoryDto category = categoryServiceInterface.createCategory(categoryDto);
-       return new ResponseEntity<>(category, HttpStatus.CREATED);
+        CategoryDto category = categoryServiceInterface.createCategory(categoryDto);
+        return new ResponseEntity<>(category, HttpStatus.CREATED);
     }
 
-    //update
     @PutMapping("/{categoryId}")
+    @Operation(summary = "Update a category", description = "Update an existing category by ID")
     public ResponseEntity<CategoryDto> updateCategory(
-            @Valid
-            @RequestBody
-            CategoryDto categoryDto,
+            @Valid @RequestBody CategoryDto categoryDto,
+            @Parameter(description = "Category ID to update", in = ParameterIn.PATH)
             @PathVariable("categoryId") String categoryId
     ){
         CategoryDto category = categoryServiceInterface.updateCategory(categoryDto,categoryId);
         return new ResponseEntity<>(category, HttpStatus.OK);
     }
 
-    //delete
     @DeleteMapping("/{categoryId}")
+    @Operation(summary = "Delete a category", description = "Delete a category by ID")
     public ResponseEntity<ApiResponseMessage> deleteCategory(
-         @PathVariable("categoryId")  String categoryId
+            @Parameter(description = "Category ID to delete", in = ParameterIn.PATH)
+            @PathVariable("categoryId")  String categoryId
     ){
         categoryServiceInterface.deleteCategory(categoryId);
-        ApiResponseMessage apiResponseMessage = ApiResponseMessage.builder().message("Category with "+categoryId+ " is deleted").success(true).status(HttpStatus.OK).build();
+        ApiResponseMessage apiResponseMessage = ApiResponseMessage.builder()
+                .message("Category with "+categoryId+ " is deleted")
+                .success(true)
+                .status(HttpStatus.OK)
+                .build();
         return new ResponseEntity<>(apiResponseMessage,HttpStatus.OK);
     }
 
-    //get all
     @GetMapping
+    @Operation(summary = "Get all categories", description = "Fetch all categories with pagination and sorting")
     public ResponseEntity<PageableResponse<CategoryDto>> getAllCategory(
             @RequestParam(value = "pageNumber",defaultValue = "0",required = false) int pageNumber,
             @RequestParam(value = "pageSize",defaultValue = "10",required = false) int pageSize,
@@ -82,28 +89,31 @@ public class CategoryController {
             @RequestParam(value = "sortDir",defaultValue = "asc",required = false) String sortDir
     ){
         return new ResponseEntity<>(categoryServiceInterface.getAllCategory(pageNumber,pageSize,sortBy,sortDir),HttpStatus.OK);
-
     }
 
     @GetMapping("/{categoryId}")
+    @Operation(summary = "Get a single category by ID")
     public ResponseEntity<CategoryDto> getSingleCategory(
+            @Parameter(description = "Category ID to fetch", in = ParameterIn.PATH)
             @PathVariable("categoryId") String categoryId
     ){
         return new ResponseEntity<>(categoryServiceInterface.getSingleCategory(categoryId),HttpStatus.OK);
     }
 
     @GetMapping("/search/{keyword}")
+    @Operation(summary = "Search categories by keyword")
     public ResponseEntity<List<CategoryDto>> getByKeyword(
+            @Parameter(description = "Keyword to search categories", in = ParameterIn.PATH)
             @PathVariable("keyword") String keyword
     ){
         return  new ResponseEntity<>(categoryServiceInterface.getCategoryByTitle(keyword),HttpStatus.OK);
     }
 
-    //upload cover image
     @PostMapping("/image/{categoryId}")
+    @Operation(summary = "Upload category cover image")
     public ResponseEntity<ImageResponseMessage> uploadCategoryCoverImage(
-            @RequestParam("categoryCoverImage") MultipartFile categoryCoverImage,
-            @PathVariable("categoryId") String categoryId
+            @Parameter(description = "Cover image file") @RequestParam("categoryCoverImage") MultipartFile categoryCoverImage,
+            @Parameter(description = "Category ID", in = ParameterIn.PATH) @PathVariable("categoryId") String categoryId
     ) throws IOException {
         String imageName = fileServiceInterface.uploadFile(categoryCoverImage, imageUploadPath);
         CategoryDto categoryDto = categoryServiceInterface.getSingleCategory(categoryId);
@@ -113,42 +123,43 @@ public class CategoryController {
         return new ResponseEntity<>(imageResponseMessage,HttpStatus.CREATED);
     }
 
-    //serve cover image
     @GetMapping("/image/{categoryId}")
+    @Operation(summary = "Serve category cover image")
     public void serveCategoryCoverImage(
-            @PathVariable("categoryId") String categoryId,
+            @Parameter(description = "Category ID", in = ParameterIn.PATH) @PathVariable("categoryId") String categoryId,
             HttpServletResponse response
     ) throws IOException {
         CategoryDto categoryDto = categoryServiceInterface.getSingleCategory(categoryId);
         InputStream resource = fileServiceInterface.getResource(imageUploadPath, categoryDto.getCoverImage());
-        response.setContentType(MediaType.IMAGE_JPEG_VALUE); //output file type as it is an image
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
         StreamUtils.copy(resource,response.getOutputStream());
     }
 
-    //create product with category
     @PostMapping("/{categoryId}/products")
+    @Operation(summary = "Create a product under a category")
     public ResponseEntity<ProductDto> createProductWithCategory(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Product details")
             @RequestBody ProductDto productDto,
-            @PathVariable("categoryId") String categoryId
+            @Parameter(description = "Category ID", in = ParameterIn.PATH) @PathVariable("categoryId") String categoryId
     ){
         ProductDto productWithCategory = productServiceInterface.createProductWithCategory(productDto, categoryId);
         return new ResponseEntity<>(productWithCategory,HttpStatus.CREATED);
     }
 
-    //assign category to product
     @PatchMapping("/{categoryId}/products/{productId}")
+    @Operation(summary = "Assign category to product")
     public ResponseEntity<ProductDto> assignCategoryToProduct(
-            @PathVariable("productId") String productId,
-            @PathVariable("categoryId") String categoryId
+            @Parameter(description = "Product ID", in = ParameterIn.PATH) @PathVariable("productId") String productId,
+            @Parameter(description = "Category ID", in = ParameterIn.PATH) @PathVariable("categoryId") String categoryId
     ){
         ProductDto dto = productServiceInterface.assignCategoryToProduct(productId, categoryId);
         return new ResponseEntity<>(dto,HttpStatus.OK);
     }
 
-    //get Products of a category
-    @GetMapping("/{categoryId}/products") // can use pageable for more efficiency
+    @GetMapping("/{categoryId}/products")
+    @Operation(summary = "Get all products of a category")
     public ResponseEntity<List<ProductDto>> getProductsOfACategory(
-            @PathVariable("categoryId") String categoryId
+            @Parameter(description = "Category ID", in = ParameterIn.PATH) @PathVariable("categoryId") String categoryId
     ){
         List<ProductDto> allProductsOfACategory = productServiceInterface.getAllProductsOfACategory(categoryId);
         return new ResponseEntity<>(allProductsOfACategory,HttpStatus.OK);
