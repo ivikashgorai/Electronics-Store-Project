@@ -87,16 +87,15 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests( request->
             // only admin can access all delete methods starting from /users/ url
             request.requestMatchers(PUBLIC_URLS).permitAll()
-                    .requestMatchers("/**").hasAnyRole("ADMIN","NORMAL")
                     .requestMatchers(HttpMethod.DELETE,"/users/**").hasRole("ADMIN")
                     // admin and normal users can access all put methods starting from /users/ url
                     .requestMatchers(HttpMethod.PUT,"/users/**").hasAnyRole("ADMIN","NORMAL")
                     .requestMatchers(HttpMethod.POST,"/users/**").permitAll()
                     .requestMatchers(HttpMethod.GET,"/users/**").permitAll()
-                    .requestMatchers(HttpMethod.GET,"/products").permitAll()
+                    .requestMatchers(HttpMethod.GET,"/products","/product/**").permitAll()
                     .requestMatchers(HttpMethod.POST,"/products").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.POST,"/categories").hasRole("ADMIN")
-                    .requestMatchers(HttpMethod.GET,"/categories/**").permitAll()
+                    .requestMatchers(HttpMethod.GET,"/categories/**","/categories").permitAll()
                     .requestMatchers(HttpMethod.POST,"auth/**").permitAll()
                     .requestMatchers("auth/**").authenticated()
                     .anyRequest().permitAll() // should be here, so that method level security will work
