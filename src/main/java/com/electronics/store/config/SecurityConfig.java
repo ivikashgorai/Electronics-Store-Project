@@ -87,6 +87,7 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests( request->
             // only admin can access all delete methods starting from /users/ url
             request.requestMatchers(PUBLIC_URLS).permitAll()
+                    .requestMatchers("/**").hasAnyRole("ADMIN","NORMAL")
                     .requestMatchers(HttpMethod.DELETE,"/users/**").hasRole("ADMIN")
                     // admin and normal users can access all put methods starting from /users/ url
                     .requestMatchers(HttpMethod.PUT,"/users/**").hasAnyRole("ADMIN","NORMAL")
